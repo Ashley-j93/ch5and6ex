@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 
-private const val TAG = "MainActivity"
+ const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
 private const val REQUEST_CODE_CHEAT = 0
 
@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateQuestion()
+
     }
 
     override fun onActivityResult(requestCode: Int,
@@ -99,6 +100,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun updateQuestion() {
+        if(quizViewModel.startNextActivity){
+            val intent = Intent(this, NewActivity::class.java)
+            startActivity(intent)
+        }
         val questionTextResId = quizViewModel.currentQuestionText
         questionTextView.setText(questionTextResId)
 
@@ -110,7 +115,11 @@ class MainActivity : AppCompatActivity() {
             userAnswer == correctAnswer -> R.string.correct_toast
             else -> R.string.incorrect_toast
         }
+        if(userAnswer == correctAnswer)
+            quizViewModel.updateCorrect()
+
         Toast.makeText(this,messageResId, Toast.LENGTH_SHORT)
             .show()
+
     }
 }

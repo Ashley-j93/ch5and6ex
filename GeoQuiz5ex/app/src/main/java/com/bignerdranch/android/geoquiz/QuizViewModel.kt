@@ -1,10 +1,14 @@
 package com.bignerdranch.android.geoquiz
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 
 class QuizViewModel: ViewModel() {
     var currentIndex = 0
+    var correct = 0
+    var answered = false
     var isCheater = false
+    var startNextActivity = false
 
     private val questionBank = listOf(
         Question(R.string.question_australia, true),
@@ -21,6 +25,24 @@ class QuizViewModel: ViewModel() {
         get() = questionBank[currentIndex].textResId
 
     fun moveToNext(){
-        currentIndex = (currentIndex + 1) % questionBank.size
+        Log.d(TAG, correct.toString())
+        answered = false
+        if(correct == 6){
+            //start new activity
+            currentIndex = 0
+            startNextActivity = true
+        } else {
+            currentIndex = (currentIndex + 1) % questionBank.size
+            if(currentIndex == 0){
+                correct = 0
+            }
+        }
+    }
+
+    fun updateCorrect(){
+        if(!answered){
+
+            correct++
+        }
     }
 }
